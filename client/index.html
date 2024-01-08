@@ -12,12 +12,13 @@
         }
       </script>
      
-    <script src="./script.js" type="module"></script>
+    <script src="index-script.js" type="module"></script>
     <title>Document</title>
 </head>
 <body>
     <div id="message-container"></div>
     <form id="form">
+      <br>
         <label for="message-input">Message</label>
         <input type="text" id="message-input">
         <button type="submit" id="send-button">Send</button>
@@ -25,5 +26,7 @@
         <input type="text" id="room-input">
         <button type="button" id="room-button">Join</button>
     </form>
+    <p>Rooms you've joined:</p>
+    <p id="room-list"></p>
 </body>
 </html>
