@@ -9,8 +9,8 @@ async function login(){
     let name = document.getElementById('login-name').value;
     let password = document.getElementById('login-password').value;
 
-
-    const res = await fetch(baseUrl, {
+    
+   let res = await fetch(baseUrl, {
         method: 'POST',
         headers:{
             "Content-Type": "application/json"
@@ -19,22 +19,30 @@ async function login(){
             info:[name, password]
         })
     })
+
+    console.log("after POST input values")
+    doesUserExistOrNot();
+
+    
+}
+
+async function doesUserExistOrNot(){
+
+    const baseUrl = 'http://127.0.0.1:3000/loggedOrNot/'
+
+    let res = await fetch(baseUrl, {
+        method: 'GET'
+    })
+    console.log("after loggedGET")
+    console.log(res);
+
+    llenarChat()
 }
 
 
-async function llenarChat(){
+ function llenarChat(){
     // IMPLEMENT THIS 'LOGGED OR NOT' ROUTE FOR TO GET THE RESULT OF WHETHER, and this could be an array that gets stored in the backend, detailing whether we're logged or not, or whether the CURRENT user is?? hard
-    const baseUrl = 'http://127.0.0.1:3000/loggedOrNot/'
-
-    const res = await fetch(baseUrl, {
-        method: 'GET',
-        headers:{
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            info:[name, password]
-        })
-    })
+  
 
 
     document.getElementById('chat-entero').innerHTML = `<div id="message-container"></div>
