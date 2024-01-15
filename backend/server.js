@@ -1,3 +1,5 @@
+import cors from 'cors';
+import helmet from 'helmet';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -5,6 +7,8 @@ import http from 'http';
 const app = express();
 const server = http.createServer(app);
 import { Server } from "socket.io";
+import { meterUser } from './backendRegister.js';
+import { loggearUser } from './backendLogin.js';
  
 const __filename = fileURLToPath(import.meta.url);
 
@@ -35,13 +39,41 @@ io.on('connection', socket =>{
     })
 })
 
-
+app.use(express.static(path.join(__dirname + './../frontend/')));
+app.use(helmet());
+  app.use(cors());
+app.use(express.json())
 
 app.get('/', function(req, res){
-    res.sendFile(path.join(__dirname + './../client/register.html'));
+    
     });
 
-    app.use(express.static(path.join(__dirname + './../client')));
+
+  // ROUTES
+
+    app.post('/', async function(req, res){
+        const {info} = req.body;
+        let result = await meterUser(info)
+        console.log(result);
+
+        });
+
+        
+
+        app.post('/login', async function(req, res){
+            const {info} = req.body;
+            let result = await loggearUser(info)
+            if (result === 'user exists'){
+            app.get('')
+
+            // ROUTE FOR GETTING RESULT OF LOGGED IN
+                
+            }
+            });
+
+        
+
+   // *******
 
 server.listen(3000,()=>{
     console.log('server is running on port 3000')     
