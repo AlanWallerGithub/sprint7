@@ -58,15 +58,23 @@ app.get('/', function(req, res){
 
         });
 
+
+ let cosita;
+
+        app.get('/loggedOrNot/', (req, res)=>{
+          console.log("inside the loggedOrNot route")
+          res.send("helloagain")
+        })
+
         
 
         app.post('/login', async function(req, res){
             const {info} = req.body;
             let result = await loggearUser(info)
             if (result === 'user exists'){
-            app.get('')
-
-            // ROUTE FOR GETTING RESULT OF LOGGED IN
+              console.log("inside the userExsists result")
+              res.redirect("http://127.0.0.1:3000/loggedOrNot/")
+              cosita = result;
                 
             }
             });
