@@ -61,9 +61,9 @@ app.get('/', function(req, res){
 
  let cosita;
 
-        app.get('/loggedOrNot/', (req, res)=>{
-          console.log("inside the loggedOrNot route")
+        app.get('/loggedOrNot/', (req, res)=>{     
           res.send("helloagain")
+    
         })
 
         
