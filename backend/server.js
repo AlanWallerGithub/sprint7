@@ -9,6 +9,7 @@ const server = http.createServer(app);
 import { Server } from "socket.io";
 import { meterUser } from './backendRegister.js';
 import { loggearUser } from './backendLogin.js';
+import { guardarMensaje } from './databaseScripts.js';
  
 const __filename = fileURLToPath(import.meta.url);
 
@@ -28,6 +29,7 @@ io.on('connection', socket =>{
     socket.on('send-message',(message, room)=>{
         if (room === ''){
             socket.broadcast.emit('receive-message',message)
+            guardarMensaje(message);
         }else{
             socket.to(room).emit('receive-message',message)
         }
