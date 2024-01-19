@@ -10,6 +10,7 @@ import { Server } from "socket.io";
 import { meterUser } from './backendRegister.js';
 import { loggearUser } from './backendLogin.js';
 import { guardarMensaje } from './databaseScripts.js';
+import { obtenerMensajes } from './databaseScripts.js';
  
 const __filename = fileURLToPath(import.meta.url);
 
@@ -41,31 +42,51 @@ io.on('connection', socket =>{
     })
 })
 
+
+
 app.use(express.static(path.join(__dirname + './../frontend/')));
-app.use(helmet());
-  app.use(cors());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      // ...
+    },
+  })
+)
+app.use(cors());
 app.use(express.json())
 
 app.get('/', function(req, res){
-    
-    });
-
+  res.send()
+  });
 
   // ROUTES
 
     app.post('/', async function(req, res){
         const {info} = req.body;
         let result = await meterUser(info)
-        console.log(result);
+       
 
         });
 
+        app.get(`http://localhost:3000/favicon.ico`, (req, res)=>{   
+         
+          
+          res.status(404)
+          
+      
+        })
 
- let cosita;
+        app.get(`/loggedOrNot/:mensajes`, (req, res)=>{   
+          
+          let mensajesParam = req.params.mensajes;
 
-        app.get('/loggedOrNot/', (req, res)=>{     
-          res.send("helloagain")
-    
+          console.log(mensajesParam)
+          
+          res.json({ arrayMensajes: mensajesParam})
+          
+      
         })
 
         
@@ -74,9 +95,14 @@ app.get('/', function(req, res){
             const {info} = req.body;
             let result = await loggearUser(info)
             if (result === 'user exists'){
-              console.log("inside the userExsists result")
-              res.redirect("http://127.0.0.1:3000/loggedOrNot/")
-              cosita = result;
+
+  
+
+              let mensajes = await obtenerMensajes()
+
+            
+              
+              res.redirect(`http://127.0.0.1:3000/loggedOrNot/${mensajes}`);
                 
             }
             });

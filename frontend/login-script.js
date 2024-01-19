@@ -4,12 +4,16 @@ let loginButton = document.getElementById('login-button')
 
 loginButton.addEventListener('click', login);
 
+
+
 async function login(){
+
+   
+
     const baseUrl = 'http://127.0.0.1:3000/login/'
     let name = document.getElementById('login-name').value;
     let password = document.getElementById('login-password').value;
 
-    
    let res = await fetch(baseUrl, {
         method: 'POST',
         headers:{
@@ -19,8 +23,7 @@ async function login(){
             info:[name, password]
         })
     })
-
-    console.log("after POST input values")
+   
     doesUserExistOrNot();
 
     
@@ -28,16 +31,30 @@ async function login(){
 
 async function doesUserExistOrNot(){
 
-    const baseUrl = 'http://127.0.0.1:3000/loggedOrNot/'
+    const baseUrl =  `http://127.0.0.1:3000/loggedOrNot/:mensajes`
 
-    let res = await fetch(baseUrl, {
-        method: 'GET'
+   
+
+    let arrayMensajes = await fetch(baseUrl, {
+        method: 'GET',
+    
+
     })
-    console.log("after loggedGET")
-    console.log(res);
+
+    .then(res => res.json())
+    .then(res => {
+        return res; // already json parsed object
+    });
+
+    console.log(arrayMensajes)
+
+
+   
 
     llenarChat()
 }
+
+
 
 
  function llenarChat(){

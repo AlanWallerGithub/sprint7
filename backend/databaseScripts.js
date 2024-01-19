@@ -23,7 +23,7 @@ export async function guardarMensaje(message){
     
 }
 
-export async function guardarMensaje(info){
+export async function obtenerMensajes(){
 
 
 
@@ -35,9 +35,13 @@ export async function guardarMensaje(info){
 
 
 
-      await Chat.create({ chatName:info[0], users:info[1] });
+      let mensajes = await Message.find({ });
 
-      return 'created'
+      
+
+      let soloMensajes = mensajes.map((m) => m.content);
+
+      return soloMensajes;
 
    
     
