@@ -4,6 +4,9 @@ let loginButton = document.getElementById('login-button')
 
 loginButton.addEventListener('click', login);
 
+let currentMessages = [];
+
+let userName = '';
 
 
 async function login(){
@@ -11,71 +14,87 @@ async function login(){
    
 
     const baseUrl = 'http://127.0.0.1:3000/login/'
-    let name = document.getElementById('login-name').value;
+    userName = document.getElementById('login-name').value;
     let password = document.getElementById('login-password').value;
 
-   let res = await fetch(baseUrl, {
+   let arrayMensajes = await fetch(baseUrl, {
         method: 'POST',
         headers:{
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            info:[name, password]
+            info:[userName, password]
         })
-    })
-   
-    doesUserExistOrNot();
-
-    
-}
-
-async function doesUserExistOrNot(){
-
-    const baseUrl =  `http://127.0.0.1:3000/loggedOrNot/:mensajes`
-
-   
-
-    let arrayMensajes = await fetch(baseUrl, {
-        method: 'GET',
-    
-
     })
 
     .then(res => res.json())
     .then(res => {
         return res; // already json parsed object
     });
-
-    console.log(arrayMensajes)
-
-
    
+    console.log('is this it2222?')
+   
+    currentMessages = arrayMensajes.arrayMensajes;
 
-    llenarChat()
+    llenarChat((arrayMensajes.arrayMensajes),'general')
+
+    
 }
 
 
 
 
- function llenarChat(){
-    // IMPLEMENT THIS 'LOGGED OR NOT' ROUTE FOR TO GET THE RESULT OF WHETHER, and this could be an array that gets stored in the backend, detailing whether we're logged or not, or whether the CURRENT user is?? hard
-  
+ function llenarChat(arrayMensajes, roomName){
 
 
-    document.getElementById('chat-entero').innerHTML = `<div id="message-container"></div>
-    <form id="form">
-      <br>
-        <label for="message-input">Message</label>
-        <input type="text" id="message-input">
-        <button type="submit" id="send-button">Send</button>
-        <label for="room-input">Room</label>
-        <input type="text" id="room-input">
-        <button type="button" id="room-button">Join</button>
-    </form>
-    <p>Rooms you've joined:</p>
-    <p id="room-list"></p>`
+    let mensajesFinales = '';
 
-    contenidoChat();
+    if (arrayMensajes.length > 0){
+        
+    let soloMensajesDelRoom = arrayMensajes.filter(function(element) {
+        
+        if (element[0] == roomName){
+            return element[1]
+        }});
+
+        
+
+    let soloMensajesSinAnuncio = soloMensajesDelRoom.map(function(element) {
+        
+        if (element[0] == roomName){
+            return element[2]+': '+element[1]
+        }});
+
+        console.log(soloMensajesSinAnuncio)
+
+       
+        
+        mensajesFinales = soloMensajesSinAnuncio.join('<br>')
+        
+    }
+
+    document.getElementById('login-page').innerHTML = '';
+    
+        document.getElementById('chat-entero').innerHTML = `
+        <p>Current room:</p><p id="current-room">general</p>
+        <div id="message-container">${mensajesFinales}</div>
+
+        <form id="form">
+          <br>
+            <label for="message-input">Message</label>
+            <input type="text" id="message-input">
+            <button type="submit" id="send-button">Send</button>
+            <label for="room-input">Room</label>
+            <input type="text" id="room-input">
+            <button type="button" id="room-button">Join</button>
+        </form>
+        <p>Rooms you've joined:</p>
+        <p id="room-list"></p>`
+    
+        contenidoChat();
+    
+
+   
 }
 
 function contenidoChat(){
@@ -91,11 +110,12 @@ const form = document.getElementById('form');
 const socket = io("http://127.0.0.1:3000/");
 
 socket.on('connect',()=>{
-    displayMessage(`User ${socket.id} joined the general chat`)
+    displayMessage(`Welcome ${userName} to the general chat!`, true)
 });
 
-socket.on('receive-message',(message)=>{
-    displayMessage(message);
+socket.on('receive-message',(message, userName)=>{
+    let newMessage = userName+': '+message
+    displayMessage(newMessage, false, true);
 })
 
 
@@ -108,25 +128,80 @@ form.addEventListener('submit', e=>{
         return
     } 
     displayMessage(message);
-    socket.emit('send-message',message, room);
+    socket.emit('send-message',message, room, userName);
 
     messageInput.value = '';
 
 });
 
 joinRoomButton.addEventListener('click',()=>{
-    const room = roomInput.value;
-    socket.emit('join-room',room, (joinMessage)=>{
-        displayMessage(joinMessage);
-        document.getElementById('room-list').innerHTML += room+'<br>'
-    });
+    let room = roomInput.value;
+    let currentRoom = document.getElementById('current-room').innerHTML;
+    if (currentRoom == room){
+        alert(`You're already in the ${currentRoom} room!`);
+        return
+    }else{
+        socket.emit('join-room',room, (joinMessage)=>{
+            displayMessage(joinMessage, true);
+            document.getElementById('room-list').innerHTML += room+'<br>'
+        });
+    }
+   
+
+    // COSAS
+    document.getElementById('current-room').innerHTML = room;
+    let arrayMensajes = currentMessages;
+    let roomName = room;
+    let mensajesFinales = '';
+
+    if (arrayMensajes.length > 0){
+        
+    let soloMensajesDelRoom = arrayMensajes.filter(function(element) {
+        
+        if (element[0] == roomName){
+            return element[1]
+        }});
+
+    let soloMensajesSinAnuncio = soloMensajesDelRoom.map(function(element) {
+        
+        if (element[0] == roomName){
+            return element[2]+': '+element[1]
+        }});
+
+
+       
+        
+        mensajesFinales = soloMensajesSinAnuncio.join('<br>')
+
+        document.getElementById('message-container').innerHTML = mensajesFinales;
+
+        
+    }
+    // COSAS 
+
 
 });
 
-function displayMessage(message){
+function displayMessage(message, announcement, otherUser){
     const div = document.createElement('div');
-    div.textContent = message;
-    document.getElementById('message-container').append(div);
+    if (announcement === true){
+
+        div.textContent = message;
+
+    }else{
+
+        if (otherUser === true){
+            div.textContent = message;
+        }else{
+            div.textContent = userName+': '+message;
+        }
+        
+        
+        
+    }
+
+    document.getElementById('message-container').append(div); 
+    
 }
 
 }

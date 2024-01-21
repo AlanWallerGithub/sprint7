@@ -27,12 +27,13 @@ let num = 0;
 
 
 io.on('connection', socket =>{
-    socket.on('send-message',(message, room)=>{
+    socket.on('send-message',(message, room, userName)=>{
         if (room === ''){
-            socket.broadcast.emit('receive-message',message)
-            guardarMensaje(message);
+            socket.broadcast.emit('receive-message',message, userName)
+            guardarMensaje(message, 'general', userName);
         }else{
-            socket.to(room).emit('receive-message',message)
+            socket.to(room).emit('receive-message',message, userName)
+            guardarMensaje(message, room, userName);
         }
         
     })
@@ -45,12 +46,12 @@ io.on('connection', socket =>{
 
 
 app.use(express.static(path.join(__dirname + './../frontend/')));
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      // ...
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
     },
   })
 )
@@ -65,7 +66,7 @@ app.get('/', function(req, res){
 
     app.post('/', async function(req, res){
         const {info} = req.body;
-        let result = await meterUser(info)
+        await meterUser(info)
        
 
         });
@@ -73,37 +74,28 @@ app.get('/', function(req, res){
         app.get(`http://localhost:3000/favicon.ico`, (req, res)=>{   
          
           
-          res.status(404)
+          res.redirect("http://localhost:3000/")
           
       
         })
 
-        app.get(`/loggedOrNot/:mensajes`, (req, res)=>{   
-          
-          let mensajesParam = req.params.mensajes;
-
-          console.log(mensajesParam)
-          
-          res.json({ arrayMensajes: mensajesParam})
-          
-      
-        })
 
         
 
-        app.post('/login', async function(req, res){
+        app.post('/login', async function(req, res, next){
             const {info} = req.body;
             let result = await loggearUser(info)
             if (result === 'user exists'){
 
   
-
+              
               let mensajes = await obtenerMensajes()
 
-            
+
+              // This should contain the NAME of the user who sent each message, please
               
-              res.redirect(`http://127.0.0.1:3000/loggedOrNot/${mensajes}`);
-                
+              res.json({ arrayMensajes: mensajes});
+             
             }
             });
 

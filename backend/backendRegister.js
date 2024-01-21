@@ -12,7 +12,7 @@ export async function meterUser(info){
 
     await mongoose.connect(uri);
 
-    let doesItExist = await User.findOne({ name: info[0], password:info[1] }).exec();
+    let doesItExist = await User.findOne({ password:info[1] }).exec();
 
     await doesItExist;
 

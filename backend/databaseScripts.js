@@ -1,9 +1,8 @@
 import { Message } from './database/models/messageModel.js';
-import { Chat } from './database/models/chatModel.js';
 
 import mongoose from 'mongoose'
 
-export async function guardarMensaje(message){
+export async function guardarMensaje(message, room, userName){
 
 
 
@@ -15,7 +14,7 @@ export async function guardarMensaje(message){
 
 
 
-      await Message.create({ content:message });
+      await Message.create({ sender: userName, content:message, chat:room});
 
       return 'created'
 
@@ -39,7 +38,8 @@ export async function obtenerMensajes(){
 
       
 
-      let soloMensajes = mensajes.map((m) => m.content);
+      let soloMensajes = mensajes.map((m) => [m.chat,m.content, m.sender]);
+    
 
       return soloMensajes;
 

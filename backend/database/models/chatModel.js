@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 
 const chatModel = mongoose.Schema(
 
-    {
+    {   
+        // make chat name unique, dont allow more
 
-        chatName: {type: String, trim:true},
+        chatName: {type: String, trim:true, unique : true},
         users:[{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
