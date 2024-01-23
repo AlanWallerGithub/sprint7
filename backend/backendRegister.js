@@ -1,4 +1,5 @@
 import { User } from "./database/models/userModel.js";
+import { hash } from "./cryptography/encryptDecrypt.js";
 
 import mongoose from 'mongoose'
 
@@ -8,21 +9,35 @@ export async function meterUser(info){
 
     let uri = "mongodb://localhost:27017/pruebaChat";
 
-    
+
+    let encryptedPass = await hash(info[1]);
+ 
+    let encryptedName = await hash(info[0]);
+
+    console.log('pass1: '+encryptedPass)
+ 
 
     await mongoose.connect(uri);
 
-    let doesItExist = await User.findOne({ password:info[1] }).exec();
+    let doesPassExist = await User.findOne({ password:encryptedPass }).exec();
 
-    await doesItExist;
+    await doesPassExist;
 
-    if (doesItExist === null){
+    let doesNameExist = await User.findOne({ name:encryptedName }).exec();
 
-      await User.create({ name: info[0], password:info[1] });
+    await doesNameExist;
+
+    if (doesPassExist === null && doesNameExist === null){
+
+      console.log('user is not in database')
+
+      await User.create({ name: encryptedName, password:encryptedPass });
 
       return 'created'
 
     }else{
+
+      console.log('user is in database')
     
       return 'not created'
     

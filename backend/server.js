@@ -1,6 +1,8 @@
 import cors from 'cors';
+import passport from 'passport';
 import helmet from 'helmet';
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import http from 'http';
@@ -11,6 +13,10 @@ import { meterUser } from './backendRegister.js';
 import { loggearUser } from './backendLogin.js';
 import { guardarMensaje } from './databaseScripts.js';
 import { obtenerMensajes } from './databaseScripts.js';
+
+import './auth.js';
+
+
  
 const __filename = fileURLToPath(import.meta.url);
 
@@ -45,6 +51,7 @@ io.on('connection', socket =>{
 
 
 
+
 app.use(express.static(path.join(__dirname + './../frontend/')));
 
 app.use(
@@ -57,6 +64,10 @@ app.use(
 )
 app.use(cors());
 app.use(express.json())
+
+app.use(session({secret: 'cats'}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', function(req, res){
   res.send()
@@ -79,10 +90,45 @@ app.get('/', function(req, res){
       
         })
 
+        app.get('/oauth',(req, res)=>{
+          console.log('were in oauth')
+          res.send()
+        })
 
+        app.get('/protected',isLoggedIn, async (req, res)=>{
+          console.log('were in protected')
+          res.send('hola desde protected')
+        })
+
+
+        app.get('/logout', (req, res)=>{
+          req.session.destroy();
+          res.redirect("http://localhost:3000/")
+        })
+
+        app.get('/auth/google',
+           passport.authenticate('google',{scope: ['email', 'profile']})
+        )
+
+        app.get('/google/callback', 
+        passport.authenticate('google',{
+
+          successRedirect: '/protected',
+          failureRedirect: '/auth/failure'
+        }))
+
+        app.get('auth/failure', (req, res)=>{
+
+          res.send('Something went wrong')
+        })
+
+        function isLoggedIn(req, res, next){
+          req.user ? next() : res.sendStatus(401)
+        }
         
 
-        app.post('/login', async function(req, res, next){
+        app.post('/login', async function(req, res){
+          console.log('were in login')
             const {info} = req.body;
             let result = await loggearUser(info)
             if (result === 'user exists'){
@@ -92,7 +138,7 @@ app.get('/', function(req, res){
               let mensajes = await obtenerMensajes()
 
 
-              // This should contain the NAME of the user who sent each message, please
+    
               
               res.json({ arrayMensajes: mensajes});
              

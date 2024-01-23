@@ -2,16 +2,26 @@
 
 let loginButton = document.getElementById('login-button')
 
-loginButton.addEventListener('click', login);
+loginButton.addEventListener('click', googleAuth);
 
 let currentMessages = [];
 
 let userName = '';
 
+async function googleAuth(){
+    const baseUrl = 'http://127.0.0.1:3000/oauth/'
+
+    await fetch(baseUrl, {
+        method: 'GET'
+    })
+
+    window.location.href = "./oauth.html";
+
+
+}
+
 
 async function login(){
-
-   
 
     const baseUrl = 'http://127.0.0.1:3000/login/'
     userName = document.getElementById('login-name').value;
@@ -115,7 +125,7 @@ socket.on('connect',()=>{
 
 socket.on('receive-message',(message, userName)=>{
     let newMessage = userName+': '+message
-    displayMessage(newMessage, false, true);
+    displayMessage(newMessage, true);
 })
 
 
@@ -182,7 +192,7 @@ joinRoomButton.addEventListener('click',()=>{
 
 });
 
-function displayMessage(message, announcement, otherUser){
+function displayMessage(message, announcement){
     const div = document.createElement('div');
     if (announcement === true){
 
@@ -190,13 +200,7 @@ function displayMessage(message, announcement, otherUser){
 
     }else{
 
-        if (otherUser === true){
-            div.textContent = message;
-        }else{
-            div.textContent = userName+': '+message;
-        }
-        
-        
+      div.textContent = userName+': '+message;  
         
     }
 
