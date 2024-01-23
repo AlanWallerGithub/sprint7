@@ -28,8 +28,6 @@ const io = new Server(server, {
     }
   });
 
-let num = 0;
-
 
 
 io.on('connection', socket =>{
@@ -79,7 +77,6 @@ app.get('/', function(req, res){
         const {info} = req.body;
         await meterUser(info)
        
-
         });
 
         app.get(`http://localhost:3000/favicon.ico`, (req, res)=>{   
@@ -90,16 +87,11 @@ app.get('/', function(req, res){
       
         })
 
-        app.get('/oauth',(req, res)=>{
-          console.log('were in oauth')
-          res.send()
-        })
 
         app.get('/protected',isLoggedIn, async (req, res)=>{
           console.log('were in protected')
-          res.send('hola desde protected')
+          res.sendFile(path.join(__dirname + './../frontend/protected.html'));
         })
-
 
         app.get('/logout', (req, res)=>{
           req.session.destroy();
@@ -144,6 +136,25 @@ app.get('/', function(req, res){
              
             }
             });
+
+            let messagesFromRoom = [];
+
+            app.post('/messagesData', async function(req, res){
+              console.log('were in messagesData')
+                const {info} = req.body;      
+                 
+                messagesFromRoom.push(info)
+                res.end()
+                });
+
+             app.get('/messagesDataToRetrieve', function(req, res){
+              console.log('were in messagesDataToRetrieve')
+             // res.json({finalMessages:messagesFromRoom})
+             res.end()
+                });
+
+
+              
 
         
 
