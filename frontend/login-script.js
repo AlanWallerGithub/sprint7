@@ -12,7 +12,7 @@ let userName = '';
 
 async function login(){
 
-    const baseUrl = 'http://127.0.0.1:3000/login/'
+    const baseUrl = 'http://localhost:3000/login/'
     userName = document.getElementById('login-name').value;
     let password = document.getElementById('login-password').value;
 
@@ -32,8 +32,20 @@ async function login(){
     });
    
     currentMessages = arrayMensajes.arrayMensajes;
+    
+    const baseUrlEncrypt = 'http://localhost:3000/encryptData/'
 
-    //messagesData(arrayMensajes.arrayMensajes, 'general', userName, currentMessages)
+    
+
+   await fetch(baseUrlEncrypt, {
+        method: 'POST',
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            info:[arrayMensajes.arrayMensajes, 'general', userName, currentMessages]
+        })
+    });
 
     window.location.href = "/auth/google";
     

@@ -13,6 +13,8 @@ import { meterUser } from './backendRegister.js';
 import { loggearUser } from './backendLogin.js';
 import { guardarMensaje } from './databaseScripts.js';
 import { obtenerMensajes } from './databaseScripts.js';
+import { encrypt, hash } from './cryptography/encryptDecrypt.js';
+import { decrypt } from './cryptography/encryptDecrypt.js';
 
 import './auth.js';
 
@@ -48,14 +50,19 @@ io.on('connection', socket =>{
 })
 
 
-
+app.get('/protected.html', function(req, res) {
+  return res.status(401).send('Not accessible');
+});
 
 app.use(express.static(path.join(__dirname + './../frontend/')));
+
+
 
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"],
+      defaultSrc: ["'self'","ws:"],
+      connectSrc:["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
     },
   })
@@ -89,9 +96,10 @@ app.get('/', function(req, res){
 
 
         app.get('/protected',isLoggedIn, async (req, res)=>{
-          console.log('were in protected')
           res.sendFile(path.join(__dirname + './../frontend/protected.html'));
         })
+
+  
 
         app.get('/logout', (req, res)=>{
           req.session.destroy();
@@ -120,43 +128,52 @@ app.get('/', function(req, res){
         
 
         app.post('/login', async function(req, res){
-          console.log('were in login')
+          
             const {info} = req.body;
+            
             let result = await loggearUser(info)
             if (result === 'user exists'){
 
-  
-              
               let mensajes = await obtenerMensajes()
 
-
-    
-              
               res.json({ arrayMensajes: mensajes});
              
             }
             });
 
-            let messagesFromRoom = [];
+            let messagesFromRoom;
 
-            app.post('/messagesData', async function(req, res){
-              console.log('were in messagesData')
-                const {info} = req.body;      
-                 
-                messagesFromRoom.push(info)
-                res.end()
-                });
-
-             app.get('/messagesDataToRetrieve', function(req, res){
-              console.log('were in messagesDataToRetrieve')
-             // res.json({finalMessages:messagesFromRoom})
-             res.end()
-                });
-
-
+            app.post('/encryptData', async function(req, res){
+                const {info} = req.body;
               
+               console.log('here is the thing '+info[1])
+              let stringInfo = JSON.stringify(info);
+              
+                let hashedData = encrypt(stringInfo);
+             
+              messagesFromRoom = hashedData;
+                  res.end()
+                 
+                
+                });
 
-        
+                app.get('/returnEncryptData', async function(req, res){
+
+                  
+                    let newData = decrypt(messagesFromRoom);
+
+                    let newDataToString = newData.toString();
+
+                    let parsedData = JSON.parse(newDataToString)
+
+                    console.log('here is the new data '+parsedData[1])
+                
+                    res.json({decryptedData:parsedData})
+                   
+                  
+                  });
+
+   
 
    // *******
 

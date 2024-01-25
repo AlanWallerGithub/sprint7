@@ -1,14 +1,20 @@
-test()
 
-function test(){
+async function discoverSomeData(){
+    const baseUrlDecrypt = 'http://localhost:3000/returnEncryptData/'
 
-    console.log('a test')
-    contenidoChat('haha', [])
+    let data = await fetch(baseUrlDecrypt, {
+         method: 'GET'
+     })
+     const dataJson = await data.json();
+    
+    llenarChat(dataJson.decryptedData[0],dataJson.decryptedData[1],dataJson.decryptedData[2],dataJson.decryptedData[3])
+
+    
+     
 }
 
-//Problems so far: i seem to have messed up the whole login page. the socket stuff doesnt work unless its in the login page itself.
+discoverSomeData()
 
-//Try putting everything back to how it was, llenarChat and contenidoChat in login page, see if that actually gets it to work. and maybe work with basic options for the data from the login, like passing them through a broswer storage or something, just to see if it actually works. then maybe even delete the routing back to the protected route, put html all back in login, the whole CREATE the chat from a button scratch, etc, and see how you can do from there. Make sure the protected branch makes it better, hope it works
 
 function llenarChat(arrayMensajes, roomName, userName, currentMessages){
 
@@ -31,7 +37,7 @@ function llenarChat(arrayMensajes, roomName, userName, currentMessages){
             return element[2]+': '+element[1]
         }});
 
-        console.log(soloMensajesSinAnuncio)
+       
 
        
         
@@ -41,7 +47,7 @@ function llenarChat(arrayMensajes, roomName, userName, currentMessages){
     
         document.getElementById('message-container').innerHTML = mensajesFinales
     
-        //contenidoChat(userName, currentMessages);
+        contenidoChat(userName, currentMessages);
 }
 
 function contenidoChat(userName, currentMessages){
@@ -54,7 +60,7 @@ const messageInput = document.getElementById('message-input');
 const roomInput = document.getElementById('room-input');
 const form = document.getElementById('form');
 
-const socket = io("http://127.0.0.1:3000/");
+const socket = io("http://localhost:3000/");
 
 socket.on('connect',()=>{
     displayMessage(`Welcome ${userName} to the general chat!`, true)
