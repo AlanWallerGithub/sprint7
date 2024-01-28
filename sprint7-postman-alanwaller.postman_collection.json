@@ -1,0 +1,34 @@
+{
+	"info": {
+		"_postman_id": "920af9b4-4bf7-4718-a17a-c6f920997379",
+		"name": "sprint7-postman-alanwaller",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30485992"
+	},
+	"item": [
+		{
+			"name": "Entrar a la web",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Registrarse",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

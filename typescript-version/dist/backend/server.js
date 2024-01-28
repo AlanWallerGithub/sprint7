@@ -71,7 +71,13 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { info } = req.body;
-        yield meterUser(info);
+        let registerResult = yield meterUser(info);
+        if (registerResult === 'created') {
+            res.send('created');
+        }
+        else {
+            res.send('not created');
+        }
     });
 });
 app.get(`http://localhost:3000/favicon.ico`, (req, res) => {
@@ -102,6 +108,9 @@ app.post('/login', function (req, res) {
         if (result === 'user exists') {
             let mensajes = yield obtenerMensajes();
             res.json({ arrayMensajes: mensajes });
+        }
+        else {
+            res.send('not logged in');
         }
     });
 });

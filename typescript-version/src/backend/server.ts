@@ -82,7 +82,13 @@ app.get('/', function(req, res){
 
     app.post('/', async function(req, res){
         const {info} = req.body;
-        await meterUser(info)
+        let registerResult = await meterUser(info)
+
+        if (registerResult === 'created'){
+          res.send('created')
+        }else{
+          res.send('not created')
+        }
        
         });
 
@@ -137,11 +143,18 @@ app.get('/', function(req, res){
               let mensajes = await obtenerMensajes()
 
               res.json({ arrayMensajes: mensajes});
+              
              
+            }else{
+              res.send('not logged in')
             }
             });
 
+            // Here we're saving the messages to send back to the client
+            // ****************
             let messagesFromRoom: { iv: string; encryptedData: string; };
+
+            // *****************
 
             app.post('/encryptData', async function(req, res){
                 const {info} = req.body;
