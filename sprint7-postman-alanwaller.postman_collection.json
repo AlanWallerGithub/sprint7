@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "920af9b4-4bf7-4718-a17a-c6f920997379",
+		"_postman_id": "d2a10bf0-64f7-433b-9160-59530038297a",
 		"name": "sprint7-postman-alanwaller",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30485992"
@@ -10,23 +10,71 @@
 			"name": "Entrar a la web",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Registrarse",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body":{
+					"mode": "raw",
+					"raw": "{\"info\": [\"nombrePrueba\",\"passwordPrueba\"]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Login",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body":{
+					"mode": "raw",
+					"raw": "{\"info\": [\"nombrePrueba\",\"passwordPrueba\"]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
 			},
 			"response": []
 		}
