@@ -114,7 +114,10 @@ app.post('/login', function (req, res) {
         }
     });
 });
+// Here we're saving the messages to send back to the client
+// ****************
 let messagesFromRoom;
+// *****************
 app.post('/encryptData', function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { info } = req.body;
