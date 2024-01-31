@@ -17,8 +17,6 @@ import { encrypt, hash } from './cryptography/encryptDecrypt.js';
 import { decrypt } from './cryptography/encryptDecrypt.js';
 
 import './auth.js';
-
-
  
 const __filename = fileURLToPath(import.meta.url);
 
@@ -100,8 +98,10 @@ app.get('/', function(req, res){
       
         })
 
+        
 
-        app.get('/protected',isLoggedIn, async (req, res)=>{
+
+        app.get('/protected', isLoggedIn, async (req, res)=>{
           res.sendFile(path.join(__dirname + './../frontend/protected.html'));
         })
 
@@ -109,6 +109,7 @@ app.get('/', function(req, res){
 
         app.get('/logout', (req, res)=>{
           req.session.destroy(()=>{});
+          
           res.redirect("http://localhost:3000/")
         })
 
@@ -131,6 +132,8 @@ app.get('/', function(req, res){
         function isLoggedIn(req: express.Request, res: express.Response, next: express.NextFunction){
           req.user ? next() : res.sendStatus(401)
         }
+
+    
         
 
         app.post('/login', async function(req, res){
@@ -185,6 +188,18 @@ app.get('/', function(req, res){
                    
                   
                   });
+
+                  app.get('/obtenerMensajes', async function(req, res){
+
+                  
+                    let messages = await obtenerMensajes();
+
+                    res.json({ arrayMensajes: messages});
+                   
+                  
+                  });
+
+
 
    
 

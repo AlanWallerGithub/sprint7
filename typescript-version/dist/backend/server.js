@@ -137,6 +137,12 @@ app.get('/returnEncryptData', function (req, res) {
         res.json({ decryptedData: parsedData });
     });
 });
+app.get('/obtenerMensajes', function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let messages = yield obtenerMensajes();
+        res.json({ arrayMensajes: messages });
+    });
+});
 // *******
 server.listen(3000, () => {
     console.log('server is running on port 3000');

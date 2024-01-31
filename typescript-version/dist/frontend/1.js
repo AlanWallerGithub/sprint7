@@ -7,7 +7,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let currentMessageArray = [];
+let currentRoomMessages = [];
+function obtenerMensajes() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const baseUrl = 'http://localhost:3000/obtenerMensajes/';
+        let arrayMensajes = yield fetch(baseUrl, {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(res => {
+            return res;
+        });
+        currentRoomMessages = yield arrayMensajes.arrayMensajes;
+    });
+}
 function discoverSomeData() {
     return __awaiter(this, void 0, void 0, function* () {
         const baseUrlDecrypt = 'http://localhost:3000/returnEncryptData/';
@@ -15,7 +28,6 @@ function discoverSomeData() {
             method: 'GET'
         });
         const dataJson = yield data.json();
-        currentMessageArray = dataJson.decryptedData[0];
         llenarChat(dataJson.decryptedData[0], dataJson.decryptedData[1], dataJson.decryptedData[2], dataJson.decryptedData[3]);
     });
 }
@@ -61,10 +73,6 @@ function contenidoChat(userName, currentMessages) {
                     if (message === '') {
                         return;
                     }
-                    // I could push the new message to the current messages array
-                    currentMessageArray.push(message);
-                    console.log('aqui hay consola ' + currentMessageArray);
-                    console.log('aqui hay consola2 ' + message);
                     displayMessage(message, false);
                     socket.emit('send-message', message, room, userName);
                     messageInput.value = '';
@@ -73,7 +81,8 @@ function contenidoChat(userName, currentMessages) {
         });
     }
     if (joinRoomButton) {
-        joinRoomButton.addEventListener('click', () => {
+        joinRoomButton.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+            yield obtenerMensajes();
             let room = roomInput.value;
             let currentRoom = document.getElementById('current-room').innerHTML;
             if (currentRoom == room) {
@@ -88,7 +97,9 @@ function contenidoChat(userName, currentMessages) {
             }
             // COSAS
             document.getElementById('current-room').innerHTML = room;
-            let arrayMensajes = currentMessageArray;
+            let arrayMensajes = currentRoomMessages;
+            console.log(' internal array ' + arrayMensajes);
+            console.log(' external array ' + currentRoomMessages);
             let roomName = room;
             let mensajesFinales = '';
             if (arrayMensajes.length > 0) {
@@ -106,7 +117,7 @@ function contenidoChat(userName, currentMessages) {
                 document.getElementById('message-container').innerHTML = mensajesFinales;
             }
             // COSAS 
-        });
+        }));
     }
     function displayMessage(message, announcement) {
         const div = document.createElement('div');

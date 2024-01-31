@@ -1,5 +1,19 @@
-let currentMessageArray: string[] = [];
+let currentRoomMessages: string[] = [];
 
+async function obtenerMensajes(){
+    const baseUrl = 'http://localhost:3000/obtenerMensajes/';
+
+   let arrayMensajes = await fetch(baseUrl, {
+        method: 'GET'
+    })
+
+    .then(res => res.json())
+    .then(res => {
+        return res;
+    });
+   
+    currentRoomMessages = await arrayMensajes.arrayMensajes;
+}
 async function discoverSomeData(){
     const baseUrlDecrypt = 'http://localhost:3000/returnEncryptData/'
 
@@ -8,7 +22,7 @@ async function discoverSomeData(){
      })
      const dataJson = await data.json();
 
-     currentMessageArray = dataJson.decryptedData[0];
+   
     
     llenarChat(dataJson.decryptedData[0],dataJson.decryptedData[1],dataJson.decryptedData[2],dataJson.decryptedData[3])
 
@@ -62,7 +76,6 @@ const messageInput = (document.getElementById('message-input') as HTMLInputEleme
 const roomInput = (document.getElementById('room-input') as HTMLInputElement);
 const form = document.getElementById('form');
 
-
 const socket = io("http://localhost:3000/");
 
 
@@ -89,11 +102,7 @@ if (form){
         if (message === ''){
             return
         } 
-        // I could push the new message to the current messages array
-        currentMessageArray.push(message);
-        console.log('aqui hay consola '+currentMessageArray)
-        console.log('aqui hay consola2 '+message)
-        // estan pero no se ven
+       
         displayMessage(message, false);
         socket.emit('send-message',message, room, userName);
     
@@ -105,8 +114,9 @@ if (form){
 
 if (joinRoomButton){
     
-
-joinRoomButton.addEventListener('click',()=>{
+    
+joinRoomButton.addEventListener('click',async ()=>{
+    await obtenerMensajes();
     let room = roomInput.value;
     let currentRoom = (document.getElementById('current-room') as HTMLElement).innerHTML;
     if (currentRoom == room){
@@ -122,7 +132,10 @@ joinRoomButton.addEventListener('click',()=>{
 
     // COSAS
     (document.getElementById('current-room') as HTMLElement).innerHTML = room;
-    let arrayMensajes = currentMessageArray;
+    
+    let arrayMensajes = currentRoomMessages;
+    console.log(' internal array '+arrayMensajes)
+    console.log(' external array '+currentRoomMessages)
     let roomName = room;
     let mensajesFinales = '';
 

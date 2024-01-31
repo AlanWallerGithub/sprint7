@@ -50,9 +50,9 @@ io.on('connection', socket =>{
 })
 
 
-app.get('/protected.html', function(req, res) {
-  return res.status(401).send('Not accessible');
-});
+// app.get('/protected.html', function(req, res) {
+//   return res.status(401).send('Not accessible');
+// });
 
 app.use(express.static(path.join(__dirname + './../frontend/')));
 
