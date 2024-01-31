@@ -144,7 +144,7 @@ app.get('/', function(req, res){
             if (result === 'user exists'){
 
               let mensajes = await obtenerMensajes()
-
+              res.setHeader('set-cookie',"foo-bar");
               res.json({ arrayMensajes: mensajes});
               
              

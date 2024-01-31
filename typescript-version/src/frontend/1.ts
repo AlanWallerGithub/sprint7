@@ -80,6 +80,7 @@ const socket = io("http://localhost:3000/");
 
 
 socket.on('connect',()=>{
+    
     displayMessage(`Welcome ${userName} to the general chat!`, true)
 });
 

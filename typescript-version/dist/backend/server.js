@@ -107,6 +107,7 @@ app.post('/login', function (req, res) {
         let result = yield loggearUser(info);
         if (result === 'user exists') {
             let mensajes = yield obtenerMensajes();
+            res.setHeader('set-cookie', "foo-bar");
             res.json({ arrayMensajes: mensajes });
         }
         else {
