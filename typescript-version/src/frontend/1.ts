@@ -1,4 +1,4 @@
-
+let currentMessageArray: string[] = [];
 
 async function discoverSomeData(){
     const baseUrlDecrypt = 'http://localhost:3000/returnEncryptData/'
@@ -7,12 +7,16 @@ async function discoverSomeData(){
          method: 'GET'
      })
      const dataJson = await data.json();
+
+     currentMessageArray = dataJson.decryptedData[0];
     
     llenarChat(dataJson.decryptedData[0],dataJson.decryptedData[1],dataJson.decryptedData[2],dataJson.decryptedData[3])
 
     
      
 }
+
+
 
 discoverSomeData()
 
@@ -53,9 +57,6 @@ function llenarChat(arrayMensajes: string[], roomName: string, userName: string,
 
 function contenidoChat(userName: string, currentMessages: string[]){
 
-
-
-
 const joinRoomButton = document.getElementById('room-button');
 const messageInput = (document.getElementById('message-input') as HTMLInputElement);
 const roomInput = (document.getElementById('room-input') as HTMLInputElement);
@@ -63,8 +64,6 @@ const form = document.getElementById('form');
 
 
 const socket = io("http://localhost:3000/");
-
-
 
 
 socket.on('connect',()=>{
@@ -90,6 +89,11 @@ if (form){
         if (message === ''){
             return
         } 
+        // I could push the new message to the current messages array
+        currentMessageArray.push(message);
+        console.log('aqui hay consola '+currentMessageArray)
+        console.log('aqui hay consola2 '+message)
+        // estan pero no se ven
         displayMessage(message, false);
         socket.emit('send-message',message, room, userName);
     
@@ -118,7 +122,7 @@ joinRoomButton.addEventListener('click',()=>{
 
     // COSAS
     (document.getElementById('current-room') as HTMLElement).innerHTML = room;
-    let arrayMensajes = currentMessages;
+    let arrayMensajes = currentMessageArray;
     let roomName = room;
     let mensajesFinales = '';
 
@@ -143,7 +147,7 @@ joinRoomButton.addEventListener('click',()=>{
 
         (document.getElementById('message-container') as HTMLElement).innerHTML = mensajesFinales;
 
-        
+       
     }
     // COSAS 
 
@@ -169,3 +173,7 @@ function displayMessage(message: string, announcement: boolean){
 }
 
 }
+
+
+
+
