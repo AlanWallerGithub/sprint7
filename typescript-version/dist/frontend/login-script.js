@@ -42,7 +42,7 @@ function login() {
                 info: [arrayMensajes.arrayMensajes, 'general', userName, currentMessages]
             })
         });
-        window.location.href = "/protected";
+        window.location.href = "/auth/google";
     });
 }
 export {};

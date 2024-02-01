@@ -133,7 +133,11 @@ app.get('/', function(req, res){
           req.user ? next() : res.sendStatus(401)
         }
 
-    
+    app.get('/cookie',(req, res)=>{
+      res.setHeader('set-cookie','foo=bar');
+      let headerzzz = res.getHeaders()
+      res.send(headerzzz['set-cookie']);
+    })
         
 
         app.post('/login', async function(req, res){
@@ -144,7 +148,7 @@ app.get('/', function(req, res){
             if (result === 'user exists'){
 
               let mensajes = await obtenerMensajes()
-              res.setHeader('set-cookie',"foo-bar");
+              
               res.json({ arrayMensajes: mensajes});
               
              

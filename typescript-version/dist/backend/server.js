@@ -101,13 +101,17 @@ app.get('auth/failure', (req, res) => {
 function isLoggedIn(req, res, next) {
     req.user ? next() : res.sendStatus(401);
 }
+app.get('/cookie', (req, res) => {
+    res.setHeader('set-cookie', 'foo=bar');
+    let headerzzz = res.getHeaders();
+    res.send(headerzzz['set-cookie']);
+});
 app.post('/login', function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { info } = req.body;
         let result = yield loggearUser(info);
         if (result === 'user exists') {
             let mensajes = yield obtenerMensajes();
-            res.setHeader('set-cookie', "foo-bar");
             res.json({ arrayMensajes: mensajes });
         }
         else {

@@ -48,6 +48,6 @@ async function login(){
         })
     });
 
-    window.location.href = "/protected";
+    window.location.href = "/auth/google";
     
 }
