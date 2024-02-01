@@ -47,7 +47,7 @@ io.on('connection', socket =>{
     })
 })
 
-
+// El chat esta aqui, escondido hasta que tengas login
 app.get('/protected.html', function(req, res) {
   return res.status(401).send('Not accessible');
 });
@@ -113,6 +113,8 @@ app.get('/', function(req, res){
           res.redirect("http://localhost:3000/")
         })
 
+
+
         app.get('/auth/google',
            passport.authenticate('google',{scope: ['email', 'profile']})
         )
@@ -166,7 +168,7 @@ app.get('/', function(req, res){
             app.post('/encryptData', async function(req, res){
                 const {info} = req.body;
               
-               console.log('here is the thing '+info[1])
+               
               let stringInfo = JSON.stringify(info);
               
                 let hashedData = encrypt(stringInfo);
@@ -186,7 +188,7 @@ app.get('/', function(req, res){
 
                     let parsedData = JSON.parse(newDataToString)
 
-                    console.log('here is the new data '+parsedData[1])
+                    
                 
                     res.json({decryptedData:parsedData})
                    
@@ -204,8 +206,6 @@ app.get('/', function(req, res){
                   });
 
 
-
-   
 
    // *******
 

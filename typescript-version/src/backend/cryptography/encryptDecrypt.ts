@@ -33,7 +33,7 @@ export async function verify(password: BinaryType, hash: string) {
 }
  
 
-const algorithm = 'aes-256-cbc'; //Using AES encryption
+const algorithm = 'aes-256-cbc';
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
 
@@ -59,14 +59,14 @@ export function encrypt(text: string) {
 let array = {1:'my name', 2:'my surname'};
 let arrayReal = ['my name','my surname']
 let stringedArray = JSON.stringify(arrayReal);
-console.log('stringified '+stringedArray)
+
  let data1 = encrypt(stringedArray)
 
- console.log('first data '+data1)
+ 
 
  let data2 = decrypt(data1)
 
  let data2String = data2.toString()
 
  let parsedData2 = JSON.parse(data2String)
- console.log('second thing '+parsedData2[1])
+ 

@@ -48,6 +48,7 @@ io.on('connection', socket => {
         callback(`Joined ${room}`);
     });
 });
+// El chat esta aqui, escondido hasta que tengas login
 app.get('/protected.html', function (req, res) {
     return res.status(401).send('Not accessible');
 });
@@ -126,7 +127,6 @@ let messagesFromRoom;
 app.post('/encryptData', function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { info } = req.body;
-        console.log('here is the thing ' + info[1]);
         let stringInfo = JSON.stringify(info);
         let hashedData = encrypt(stringInfo);
         messagesFromRoom = hashedData;
@@ -138,7 +138,6 @@ app.get('/returnEncryptData', function (req, res) {
         let newData = decrypt(messagesFromRoom);
         let newDataToString = newData.toString();
         let parsedData = JSON.parse(newDataToString);
-        console.log('here is the new data ' + parsedData[1]);
         res.json({ decryptedData: parsedData });
     });
 });

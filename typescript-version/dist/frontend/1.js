@@ -95,11 +95,9 @@ function contenidoChat(userName, currentMessages) {
                     document.getElementById('room-list').innerHTML += room + '<br>';
                 });
             }
-            // COSAS
+            // 
             document.getElementById('current-room').innerHTML = room;
             let arrayMensajes = currentRoomMessages;
-            console.log(' internal array ' + arrayMensajes);
-            console.log(' external array ' + currentRoomMessages);
             let roomName = room;
             let mensajesFinales = '';
             if (arrayMensajes.length > 0) {
@@ -116,7 +114,7 @@ function contenidoChat(userName, currentMessages) {
                 mensajesFinales = soloMensajesSinAnuncio.join('<br>');
                 document.getElementById('message-container').innerHTML = mensajesFinales;
             }
-            // COSAS 
+            //  
         }));
     }
     function displayMessage(message, announcement) {

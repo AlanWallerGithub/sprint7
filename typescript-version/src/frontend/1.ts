@@ -57,8 +57,6 @@ function llenarChat(arrayMensajes: string[], roomName: string, userName: string,
         }});
 
        
-
-       
         
         mensajesFinales = soloMensajesSinAnuncio.join('<br>')
         
@@ -131,12 +129,11 @@ joinRoomButton.addEventListener('click',async ()=>{
     }
    
 
-    // COSAS
+    // 
     (document.getElementById('current-room') as HTMLElement).innerHTML = room;
     
     let arrayMensajes = currentRoomMessages;
-    console.log(' internal array '+arrayMensajes)
-    console.log(' external array '+currentRoomMessages)
+    
     let roomName = room;
     let mensajesFinales = '';
 
@@ -163,7 +160,7 @@ joinRoomButton.addEventListener('click',async ()=>{
 
        
     }
-    // COSAS 
+    //  
 
 
 });

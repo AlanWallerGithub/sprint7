@@ -14,7 +14,7 @@ export async function meterUser(info: string[]){
  
     let encryptedName = await hash(info[0]);
 
-    console.log('pass1: '+encryptedPass)
+  
  
 
     await mongoose.connect(uri);

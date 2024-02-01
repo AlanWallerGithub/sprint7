@@ -15,7 +15,6 @@ export function meterUser(info) {
         let uri = "mongodb://localhost:27017/pruebaChat";
         let encryptedPass = yield hash(info[1]);
         let encryptedName = yield hash(info[0]);
-        console.log('pass1: ' + encryptedPass);
         yield mongoose.connect(uri);
         let doesPassExist = yield User.findOne({ password: encryptedPass }).exec();
         yield doesPassExist;
